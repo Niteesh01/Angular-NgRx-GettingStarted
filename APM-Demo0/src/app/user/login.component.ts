@@ -20,9 +20,9 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.pipe(select('maskUserName')).subscribe(
-      maskUserName =>{
-        if(maskUserName){this.maskUserName = maskUserName}
+    this.store.pipe(select('users')).subscribe(
+      users =>{
+        if(users){this.maskUserName = users.maskUserName}
         }
     )
 
