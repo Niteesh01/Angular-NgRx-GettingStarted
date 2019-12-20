@@ -50,8 +50,11 @@ export function reducer(state = initialState, action: ProductActions): ProductSt
         showProductCode: action.payload
       };
 
-      
-
+      case ProductActionTypes.SetCurrentProduct:
+        return {
+          ...state,
+          currentProduct: {...action.payload}
+        };
 
       case ProductActionTypes.ClearCurrentProduct:
       return {
@@ -67,7 +70,7 @@ export function reducer(state = initialState, action: ProductActions): ProductSt
           productName:'',
           productCode: 'New',
           description: '',
-          starRating: 0+
+          starRating: 0
         }
       };
 
