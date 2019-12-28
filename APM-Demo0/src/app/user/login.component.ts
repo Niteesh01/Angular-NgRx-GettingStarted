@@ -5,7 +5,9 @@ import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { AuthService } from './auth.service';
-import { Store, select } from '@ngrx/store';
+import { Store, select, Action } from '@ngrx/store';
+
+import * as userActions from './state/user.actions'
 
 @Component({
   templateUrl: './login.component.html',
@@ -36,10 +38,9 @@ export class LoginComponent implements OnInit {
 
   checkChanged(value: boolean): void {
     // this.maskUserName = value;
-    this.store.dispatch({
-      type: 'MASK_USER_NAME',
-      payload: value
-    })
+    this.store.dispatch(
+     new userActions.MaskUserName(value)
+    )
   }
 
   login(loginForm: NgForm): void {

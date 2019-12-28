@@ -1,4 +1,5 @@
 
+
 import { environment } from './../environments/environment';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -22,6 +23,8 @@ import { UserModule } from './user/user.module';
 /* NgRx */
 import { StoreModule } from '@ngrx/store'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
+import { EffectsModule } from '@ngrx/effects';
+
 
 
 @NgModule({
@@ -32,6 +35,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools'
     UserModule,
     AppRoutingModule,
     StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
     StoreDevtoolsModule.instrument({
       name: 'APM Demo App DevTools' ,
       maxAge:25,

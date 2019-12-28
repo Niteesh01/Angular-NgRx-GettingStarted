@@ -5,6 +5,8 @@ import { Product } from '../product';
 import { ProductService } from '../product.service';
 import { Store, select } from '@ngrx/store';
 import * as productActions from '../state/product.actions'
+import { takeWhile } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'pm-product-list',
@@ -12,6 +14,7 @@ import * as productActions from '../state/product.actions'
   styleUrls: ['./product-list.component.css']
 })
 export class ProductListComponent implements OnInit, OnDestroy {
+  componentActive = true;
   pageTitle = 'Products';
   errorMessage: string;
 
@@ -21,30 +24,44 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   // Used to highlight the selected product in the list
   selectedProduct: Product | null;
+  products$: Observable<Product[]>;
+  errorMessage$: Observable<string>;
 
 
   constructor(private store: Store<fromProduct.State>,
               private productService: ProductService
               ) { }
 
-  ngOnInit(): void {
-    //TODO: Unsubscribe
-    this.store.pipe(select(fromProduct.getCurrentProduct)).subscribe(
-      currentProduct => this.selectedProduct = currentProduct
-    );
+              ngOnInit(): void {
 
-    this.productService.getProducts().subscribe({
-      next: (products: Product[]) => this.products = products,
-      error: (err: any) => this.errorMessage = err.error
-    });
+                // Do NOT subscribe here because it uses an async pipe
+                // This gets the initial values until the load is complete.
+                this.products$ = this.store.pipe(select(fromProduct.getProducts)) as Observable<Product[]>;
 
-    this.store.pipe(select(fromProduct.getShowProductCode)).subscribe(
-      showProductCode => this.displayCode = showProductCode
-    );
-  }
+                // Do NOT subscribe here because it used an async pipe
+                this.errorMessage$ = this.store.pipe(select(fromProduct.getError));
+
+                this.store.dispatch(new productActions.Load());
+
+                // Subscribe here because it does not use an async pipe
+                this.store.pipe(
+                  select(fromProduct.getCurrentProduct),
+                  takeWhile(() => this.componentActive)
+                ).subscribe(
+                  currentProduct => this.selectedProduct = currentProduct
+                );
+
+                // Subscribe here because it does not use an async pipe
+                this.store.pipe(
+                  select(fromProduct.getShowProductCode),
+                  takeWhile(() => this.componentActive)
+                ).subscribe(
+                  showProductCode => this.displayCode = showProductCode
+                );
+              }
 
   ngOnDestroy(): void {
-    
+    this.componentActive = false
   }
 
   checkChanged(value: boolean): void {

@@ -1,3 +1,4 @@
+import { UserActions, UserActionTypes } from './user.actions';
 import { UserState } from './user.reducer';
 
 import { State } from './../../products/state/product.reducer';
@@ -17,7 +18,7 @@ const initialState: UserState = {
   currentUser: null
 }
 
-const getUserFeatureState = createFeatureSelector<UserState>('userss')
+const getUserFeatureState = createFeatureSelector<UserState>('users')
 
 export const getMaskUserName = createSelector(
   getUserFeatureState,
@@ -30,10 +31,10 @@ export const getCurrentUser = createSelector(
 )
 
 
-export function reducer(state = initialState, action){
+export function reducer(state = initialState, action: UserActions){
   switch(action.type) {
 
-    case 'MASK_USER_NAME':
+    case UserActionTypes.MaskUserName:
       return {
         ...state,
         maskUserName: action.payload
