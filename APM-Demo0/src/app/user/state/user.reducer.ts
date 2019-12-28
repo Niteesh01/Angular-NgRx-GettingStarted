@@ -1,7 +1,7 @@
 import { UserActions, UserActionTypes } from './user.actions';
 import { UserState } from './user.reducer';
 
-import { State } from './../../products/state/product.reducer';
+import { State } from './../../products/state';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 
