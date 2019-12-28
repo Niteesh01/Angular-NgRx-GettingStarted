@@ -14,7 +14,7 @@ export interface ProductState {
   showProductCode: boolean;
   currentProductId: number | null;
   products: Product[];
-  error: string
+  error: string;
 }
 
 const initialState: ProductState = {
@@ -42,17 +42,16 @@ export const getCurrentProduct = createSelector(
   getProductFeatureState,
   getCurrentProductId,
   (state, currentProductId) => {
-    if(currentProductId === 0){
+    if(currentProductId === 0) {
       return {
         id: 0,
         productName: '',
         productCode: 'New',
-        description:'',
+        description: '',
         starRating: 0
       };
-    }
-    else {
-      return currentProductId ? state.products.find(p => p.id === currentProductId): null
+    } else {
+      return currentProductId ? state.products.find(p => p.id === currentProductId): null;
     }
 
   }
@@ -124,7 +123,7 @@ export function reducer(state = initialState, action: ProductActions): ProductSt
           const updatedProducts = state.products.map(
             item => action.payload.id === item.id ? action.payload : item);
 
-            return {
+          return {
               ...state,
               products: updatedProducts,
               currentProductId: action.payload.id,
@@ -136,16 +135,38 @@ export function reducer(state = initialState, action: ProductActions): ProductSt
             return {
               ...state,
               error: action.payload
+                };
 
+        case ProductActionTypes.CreateProductSuccess:
+            return {
+              ...state,
+              products: [...state.products, action.payload],
+              currentProductId: action.payload.id,
+              error:''
+            };
 
-                }
+         case ProductActionTypes.CreateProductFail:
+            return {
+              ...state,
+              error:action.payload
+            };
 
-
-
+          case ProductActionTypes.DeleteProductSuccess:
+                      return {
+                        ...state,
+                        products: state.products.filter(product => product.id !== action.payload),
+                        currentProductId: null,
+                        error: ''
+                      };
+          case ProductActionTypes.DeleteProductFail:
+              return {
+                ...state,
+                error: action.payload
+              };
 
 
 
     default:
-      return state
+      return state;
   }
 }

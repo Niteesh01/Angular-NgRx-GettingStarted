@@ -61,7 +61,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
               }
 
   ngOnDestroy(): void {
-    this.componentActive = false
+    this.componentActive = false;
   }
 
   checkChanged(value: boolean): void {
